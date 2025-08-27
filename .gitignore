@@ -1,0 +1,10 @@
+.idea/
+*.iml
+
+/out/
+/build/
+/target/
+
+*.log
+
+vault.txt
