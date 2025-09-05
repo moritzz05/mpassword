@@ -6,15 +6,19 @@ import java.util.Scanner;
 public class Manager {
 
     private Map<String, Account> accounts;
-    private String masterPassword;
+    private final String masterPassword;
     private boolean unlocked;
-
-    private Storage db = new Storage();
+    private final Storage db;
 
     public Manager(String masterPassword) {
         this.accounts = new HashMap<>();
         this.masterPassword = masterPassword;
         this.unlocked = false;
+        this.db = new Storage();
+    }
+
+    public Map<String, Account> getAccounts() {
+        return accounts;
     }
 
     public String getMasterPassword() {
@@ -25,12 +29,12 @@ public class Manager {
         return db;
     }
 
-    public Map<String, Account> getAccounts() {
-        return accounts;
-    }
-
     public void setUnlocked(boolean unlocked) {
         this.unlocked = unlocked;
+    }
+
+    public void lock() {
+        this.setUnlocked(false);
     }
 
     public void unlock(String attempt) {
@@ -40,10 +44,6 @@ public class Manager {
         } else {
             this.setUnlocked(true);
         }
-    }
-
-    public void lock() {
-        this.setUnlocked(false);
     }
 
     public void list() {
@@ -89,85 +89,89 @@ public class Manager {
         }
     }
 
-//    public static void main(String[] args) {
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Set masterpassword please");
-//        String mpw = scanner.nextLine();
-//        Manager mpassword = new Manager(mpw);
-//        System.out.println("mpw set");
-//        System.out.println("Starting vault...");
-//
-//        while (!mpassword.unlocked) {
-//            System.out.println("Masterpassword please!");
-//            mpassword.unlock(scanner.nextLine());
-//        }
-//
-//        boolean running = true;
-//
-//        while (running) {
-//            mpassword.accounts = mpassword.db.load(mpw);
-//
-//            System.out.println("Welcome to mpassword!");
-//            System.out.println("(1) See all accounts");
-//            System.out.println("(2) Add account");
-//            System.out.println("(3) Get specific account");
-//            System.out.println("(4) Delete specific account");
-//            System.out.println("(5) STOP");
-//
-//            String input = scanner.nextLine();
-//
-//            switch (input) {
-//                case "1":
-//                    mpassword.list();
-//                    break;
-//                case "2":
-//                    String name = scanner.nextLine();
-//                    String website = scanner.nextLine();
-//                    String username = scanner.nextLine();
-//                    String password = scanner.nextLine();
-//                    Account newAccount = new Account(name, website, username, password);
-//                    mpassword.add(newAccount);
-//                    mpassword.db.save(mpassword.accounts, mpw);
-//                    break;
-//                case "3":
-//                    String toGet = scanner.nextLine();
-//                    System.out.println(mpassword.get(toGet));
-//                    break;
-//                case "4":
-//                    String toDel = scanner.nextLine();
-//                    mpassword.delete(toDel);
-//                    mpassword.db.save(mpassword.accounts, mpw);
-//                    break;
-//                case "5":
-//                    mpassword.db.save(mpassword.accounts, mpw);
-//                    return;
-//                default:
-//                    System.out.println("Invalid number");
-//                    mpassword.db.save(mpassword.accounts, mpw);
-//                    break;
-//            }
-//        }
-//    }
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Set masterpassword please");
-        String mpw = scanner.nextLine();
-        Manager mpassword = new Manager(mpw);
-        System.out.println("mpw set");
-        System.out.println("Starting vault...");
+        System.out.println("Choose mode: 1 = CLI, 2 = GUI");
+        String mode = scanner.nextLine();
+        boolean gui = mode.equals("2");
 
-        while (!mpassword.unlocked) {
-            System.out.println("Masterpassword please!");
-            mpassword.unlock(scanner.nextLine());
+        if (!gui) {
+            scanner = new Scanner(System.in);
+            System.out.println("Set master password please:");
+            String mpw = scanner.nextLine();
+            Manager mpassword = new Manager(mpw);
+            System.out.println("master password set!");
+            System.out.println("Starting vault...");
+
+            while (!mpassword.unlocked) {
+                System.out.println("Master password please!");
+                mpassword.unlock(scanner.nextLine());
+            }
+
+            boolean running = true;
+
+            while (running) {
+                mpassword.accounts = mpassword.db.load(mpw);
+
+                System.out.println("Welcome to mpassword!");
+                System.out.println("(1) See all accounts");
+                System.out.println("(2) Add account");
+                System.out.println("(3) Get specific account");
+                System.out.println("(4) Delete specific account");
+                System.out.println("(5) STOP");
+
+                String input = scanner.nextLine();
+
+                switch (input) {
+                    case "1":
+                        mpassword.list();
+                        break;
+                    case "2":
+                        String name = scanner.nextLine();
+                        String website = scanner.nextLine();
+                        String username = scanner.nextLine();
+                        String password = scanner.nextLine();
+                        Account newAccount = new Account(name, website, username, password);
+                        mpassword.add(newAccount);
+                        mpassword.db.save(mpassword.accounts, mpw);
+                        break;
+                    case "3":
+                        String toGet = scanner.nextLine();
+                        System.out.println(mpassword.get(toGet));
+                        break;
+                    case "4":
+                        String toDel = scanner.nextLine();
+                        mpassword.delete(toDel);
+                        mpassword.db.save(mpassword.accounts, mpw);
+                        break;
+                    case "5":
+                        mpassword.db.save(mpassword.accounts, mpw);
+                        return;
+                    default:
+                        System.out.println("Invalid number");
+                        mpassword.db.save(mpassword.accounts, mpw);
+                        break;
+                }
+            }
+        } else {
+            System.out.println("Set master password please:");
+            String mpw = scanner.nextLine();
+            Manager mpassword = new Manager(mpw);
+            System.out.println("master password set!");
+            System.out.println("Starting vault...");
+
+            while (!mpassword.unlocked) {
+                System.out.println("Masterpassword please!");
+                mpassword.unlock(scanner.nextLine());
+            }
+
+            mpassword.accounts = mpassword.db.load(mpw);
+
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                UI ui = new UI(mpassword);
+                ui.setVisible(true);
+            });
         }
-
-        mpassword.accounts = mpassword.db.load(mpw);
-
-        javax.swing.SwingUtilities.invokeLater(() -> {
-            UI ui = new UI(mpassword);
-            ui.setVisible(true);
-        });
     }
 
 }

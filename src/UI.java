@@ -17,13 +17,13 @@ public class UI extends JFrame {
         setSize(600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        String[] columns = {"Account", "Benutzer", "Passwort"};
+        String[] columns = {"Account", "Website", "User", "Password"};
         tableModel = new DefaultTableModel(columns, 0);
         table = new JTable(tableModel);
 
-        JButton add = new JButton("Hinzufügen");
-        JButton delete = new JButton("Löschen");
-        JButton save = new JButton("Speichern");
+        JButton add = new JButton("Add");
+        JButton delete = new JButton("Delete");
+        JButton save = new JButton("Save");
 
         add.addActionListener(this::onAdd);
         delete.addActionListener(this::onDelete);
@@ -54,16 +54,16 @@ public class UI extends JFrame {
         JTextField accountField = new JTextField();
         JTextField websiteField = new JTextField();
         JTextField userField = new JTextField();
-        JTextField passField = new JTextField();
+        JTextField passwordField = new JTextField();
 
         Object[] message = {
                 "Account:", accountField,
                 "Website:", websiteField,
                 "User:", userField,
-                "Passwort", passField
+                "Password", passwordField
         };
 
-        int option = JOptionPane.showConfirmDialog(this, message, "Neuen Eintrag hinzufügen",
+        int option = JOptionPane.showConfirmDialog(this, message, "Add new entry",
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == JOptionPane.OK_OPTION) {
@@ -71,7 +71,7 @@ public class UI extends JFrame {
                     accountField.getText(),
                     websiteField.getText(),
                     userField.getText(),
-                    passField.getText()
+                    passwordField.getText()
             );
             manager.add(account);
             tableModel.addRow(new Object[]{
@@ -92,13 +92,13 @@ public class UI extends JFrame {
             tableModel.removeRow(row);
             manager.getDb().save(manager.getAccounts(), manager.getMasterPassword());
         } else {
-            JOptionPane.showMessageDialog(this, "Bitte wähle zuerst einen Eintrag aus!");
+            JOptionPane.showMessageDialog(this, "Choose entry first!");
         }
     }
 
     private void onSave(ActionEvent e) {
         manager.getDb().save(manager.getAccounts(), manager.getMasterPassword());
-        JOptionPane.showMessageDialog(this, "Gespeichert!");
+        JOptionPane.showMessageDialog(this, "Saved!");
     }
 
 }
