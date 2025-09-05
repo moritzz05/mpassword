@@ -17,6 +17,18 @@ public class Manager {
         this.unlocked = false;
     }
 
+    public String getMasterPassword() {
+        return masterPassword;
+    }
+
+    public Storage getDb() {
+        return db;
+    }
+
+    public Map<String, Account> getAccounts() {
+        return accounts;
+    }
+
     public void setUnlocked(boolean unlocked) {
         this.unlocked = unlocked;
     }
@@ -77,63 +89,85 @@ public class Manager {
         }
     }
 
-    public static void main(String[] args) {
-//        Account disney = new Account("Disney", "disney.com", "Tester", "dis123");
-//        Account spotify = new Account("Spotify", "spotify.com", "Tester", "spot123");
-//        Account valheim = new Account("Valheim", "valheim.com", "Tester", "val123");
+//    public static void main(String[] args) {
+//        Scanner scanner = new Scanner(System.in);
+//        System.out.println("Set masterpassword please");
+//        String mpw = scanner.nextLine();
+//        Manager mpassword = new Manager(mpw);
+//        System.out.println("mpw set");
+//        System.out.println("Starting vault...");
+//
+//        while (!mpassword.unlocked) {
+//            System.out.println("Masterpassword please!");
+//            mpassword.unlock(scanner.nextLine());
+//        }
+//
+//        boolean running = true;
+//
+//        while (running) {
+//            mpassword.accounts = mpassword.db.load(mpw);
+//
+//            System.out.println("Welcome to mpassword!");
+//            System.out.println("(1) See all accounts");
+//            System.out.println("(2) Add account");
+//            System.out.println("(3) Get specific account");
+//            System.out.println("(4) Delete specific account");
+//            System.out.println("(5) STOP");
+//
+//            String input = scanner.nextLine();
+//
+//            switch (input) {
+//                case "1":
+//                    mpassword.list();
+//                    break;
+//                case "2":
+//                    String name = scanner.nextLine();
+//                    String website = scanner.nextLine();
+//                    String username = scanner.nextLine();
+//                    String password = scanner.nextLine();
+//                    Account newAccount = new Account(name, website, username, password);
+//                    mpassword.add(newAccount);
+//                    mpassword.db.save(mpassword.accounts, mpw);
+//                    break;
+//                case "3":
+//                    String toGet = scanner.nextLine();
+//                    System.out.println(mpassword.get(toGet));
+//                    break;
+//                case "4":
+//                    String toDel = scanner.nextLine();
+//                    mpassword.delete(toDel);
+//                    mpassword.db.save(mpassword.accounts, mpw);
+//                    break;
+//                case "5":
+//                    mpassword.db.save(mpassword.accounts, mpw);
+//                    return;
+//                default:
+//                    System.out.println("Invalid number");
+//                    mpassword.db.save(mpassword.accounts, mpw);
+//                    break;
+//            }
+//        }
+//    }
 
-        Manager mpassword = new Manager("hehehe");
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Set masterpassword please");
+        String mpw = scanner.nextLine();
+        Manager mpassword = new Manager(mpw);
+        System.out.println("mpw set");
+        System.out.println("Starting vault...");
 
         while (!mpassword.unlocked) {
             System.out.println("Masterpassword please!");
             mpassword.unlock(scanner.nextLine());
         }
 
-        boolean running = true;
+        mpassword.accounts = mpassword.db.load(mpw);
 
-        while (running) {
-            mpassword.accounts = mpassword.db.load();
-
-            System.out.println("Welcome to mpassword!");
-            System.out.println("(1) See all accounts");
-            System.out.println("(2) Add account");
-            System.out.println("(3) Get specific account");
-            System.out.println("(4) Delete specific account");
-            System.out.println("(5) STOP");
-
-            String input = scanner.nextLine();
-
-            switch (input) {
-                case "1":
-                    mpassword.list();
-                    break;
-                case "2":
-                    String name = scanner.nextLine();
-                    String website = scanner.nextLine();
-                    String username = scanner.nextLine();
-                    String password = scanner.nextLine();
-                    Account newAccount = new Account(name, website, username, password);
-                    mpassword.add(newAccount);
-                    mpassword.db.save(mpassword.accounts);
-                    break;
-                case "3":
-                    String toGet = scanner.nextLine();
-                    System.out.println(mpassword.get(toGet));
-                    break;
-                case "4":
-                    String toDel = scanner.nextLine();
-                    mpassword.delete(toDel);
-                    mpassword.db.save(mpassword.accounts);
-                    break;
-                case "5":
-                    mpassword.db.save(mpassword.accounts);
-                    return;
-                default:
-                    System.out.println("Invalid number");
-                    mpassword.db.save(mpassword.accounts);
-                    break;
-            }
-        }
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            UI ui = new UI(mpassword);
+            ui.setVisible(true);
+        });
     }
+
 }
