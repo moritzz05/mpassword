@@ -1,1 +1,7 @@
-This is an easy demo of a password manager that runs completely locally.
+This is an easy demo of a password manager.
+- local encryption
+- CLI or GUI
+
+ToDo
+- Cloud integration
+- Better GUI
